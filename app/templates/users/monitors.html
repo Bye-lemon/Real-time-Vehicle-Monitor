@@ -1,0 +1,354 @@
+{% extends "layout.html" %}
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+{% endblock %}
+{% block content %}
+    <div class="py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    当前车辆ID：
+                    <b id="car_id">
+
+                    </b>
+                </div>
+                <div class="col-md-4">
+                    北京时间：
+                    <b id="time">
+
+                    </b>
+                </div>
+                <div class="col-lg-4">
+                    实时车辆数量：
+                    <b id="car">
+
+                    </b>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="text-muted">
+                        实时数据监控
+                    </h5>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="speed"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="text-muted align-center">
+                        实时驾驶路线
+                        <br>
+                    </h5>
+                </div>
+                <div class="col-lg-4">
+
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="text-muted align-center">
+                        实时驾驶路线
+                        <br>
+                    </h5>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" id="path">
+
+                </div>
+                <div class="col-md-6" id="status">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {#    <div class="py-5">#}
+    {#        <div class="container">#}
+    {#            <div class="row">#}
+    {#                <div class="col-md-12">#}
+    {#                    <h5 class="text-muted">#}
+    {#                        驾驶状态分析#}
+    {#                    </h5>#}
+    {#                    <hr>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#            <div class="row">#}
+    {#                <div class="col-md-4">#}
+    {#                    <div class="card">#}
+    {#                        <div class="card-header"> 实时风险评估</div>#}
+    {#                        <div class="card-body">#}
+    {#                            <h4>驾驶风险指数</h4>#}
+    {#                            <p id="race_index">#}
+    {##}
+    {#                            </p>#}
+    {#                            <h4>驾驶风险等级</h4>#}
+    {#                            <p id="race">#}
+    {##}
+    {#                            </p>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <div class="col-md-4">#}
+    {#                    <div class="card">#}
+    {#                        <div class="card-header"> 驾驶经验评估</div>#}
+    {#                        <div class="card-body">#}
+    {#                            <h4>驾驶经验指数</h4>#}
+    {#                            <p id="experience_index">#}
+    {#                                4.835#}
+    {#                            </p>#}
+    {#                            <h4>驾驶经验指数</h4>#}
+    {#                            <p id="experience">#}
+    {##}
+    {#                            </p>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <div class="col-md-4">#}
+    {#                    <div class="card">#}
+    {#                        <div class="card-header"> 驾驶行为统计</div>#}
+    {#                        <div class="card-body">#}
+    {#                            <h4>急加速急转弯次数</h4>#}
+    {#                            <p id="fast">#}
+    {##}
+    {#                            </p>#}
+    {#                            <h4>车道偏离次数</h4>#}
+    {#                            <p id="lane">#}
+    {##}
+    {#                            </p>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+    <div class="py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="text-muted">
+                        原始数据
+                    </h5>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="rawdata">
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="https://unpkg.com/function-plot@1/dist/function-plot.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.js"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=oV6Q4Gr4e3UI6psb0bgz0NRhnqXHMh53"></script>
+    <script>
+        function render(data, pred) {
+            $('#rawdata').html('<table width="100%" cellpadding="0" cellspacing="0" border="0" class="display table table-striped table-bordered" id="example"></table>');
+            $('#example').DataTable({
+                "data": data,
+                "scrollX": true,
+                "columns": [
+                    {"title": "车辆数目"},
+                    {"title": "handbreak"},
+                    {"title": "最大RPM"},
+                    {"title": "当前RPM", "class": "center"},
+                    {"title": "速度"},
+                    {"title": "UNIX时间戳", "class": "center"},
+                    {"title": "位置X"},
+                    {"title": "位置Y"},
+                    {"title": "位置Z"},
+                    {"title": "角加速度X"},
+                    {"title": "角加速度Y"},
+                    {"title": "角加速度Z"},
+                    {"title": "角速度X"},
+                    {"title": "角速度Y"},
+                    {"title": "角速度Z"},
+                    {"title": "线加速度X"},
+                    {"title": "线加速度Y"},
+                    {"title": "线加速度Z"},
+                    {"title": "线速度X"},
+                    {"title": "线速度Y"},
+                    {"title": "线速度Z"},
+                ],
+                "pagingType": "full_numbers",
+                "language": {
+                    "lengthMenu": "每页 _MENU_ 条记录",
+                    "zeroRecords": "没有找到记录",
+                    "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
+                    "infoEmpty": "无记录",
+                    "infoFiltered": "(从 _MAX_ 条记录过滤)",
+                    "search": "搜索：",
+                    "paginate": {
+                        "first": "首页",
+                        "last": "尾页",
+                        "next": "下一页",
+                        "previous": "上一页"
+                    }
+                }
+            });
+            let getSpeed = (x) => x[4];
+            let getTime = (x) => x[5];
+            let get_la_x = (x) => x[16];
+            let get_la_y = (x) => x[17];
+            let speedchart = Highcharts.chart('speed', {
+                title: {
+                    text: '实时车辆速度走势图'
+                },
+                yAxis: {
+                    title: {
+                        text: '速度（m/s）'
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        animation: false,
+                        data: data.map(getTime)
+                    }
+                },
+                series: [{
+                    name: '速度',
+                    data: data.map(getSpeed)
+                }, {
+                    name: 'X加速度',
+                    data: data.map(get_la_x)
+                }, {
+                    name: 'Y加速度',
+                    data: data.map(get_la_y)
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+            let getPosition = (x) => [{"B": x[6], "L": x[7]}];
+            let points = data.map(getPosition);
+
+            let point, marker, bpoints = [];
+            // 创建标注对象并添加到地图
+
+            point = new BMap.Point(points[40][0].L, points[40][0].B);
+            bpoints.push(point);
+            marker = new BMap.Marker(point);
+            window.map.addOverlay(marker);
+
+            //按照添加的坐标计算合适的zoom及中心坐标并更新map
+            window.map.setViewport(bpoints);
+
+            let getRate = (x) => [['激进型', x.high], ['正常', x.mid], ['保守型', x.low]];
+            let chart = Highcharts.chart('status', {
+                title: {
+                    text: ' '
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -50,
+                            style: {
+                                fontWeight: 'bold',
+                                color: 'white',
+                                textShadow: '0px 1px 2px black'
+                            }
+                        },
+                        animation: false,
+                        startAngle: -135, // 圆环的开始角度
+                        endAngle: 135,    // 圆环的结束角度
+                        center: ['50%', '75%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '概率',
+                    innerSize: '50%',
+                    data: getRate(pred)
+                }]
+            });
+        }
+    </script>
+    <script>
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+
+        //构造map对象
+        window.map = new BMap.Map("path");
+        //初始化map对象
+        window.map.centerAndZoom(new BMap.Point(121.51, 38.88), 17);
+        //增加地图控件（当前增加的控件对应为"地图-卫星图-三维图"切换控件）
+        window.map.addControl(new BMap.MapTypeControl());
+        //启用滚轮缩放map大小
+        window.map.enableScrollWheelZoom(true);
+        //  let socket = io({transports: ['websocket']});
+
+        let socket = io();
+        socket.on('wsresponse', async function (data) {
+            let car_id = document.getElementById("car_id");
+            car_id.innerText = data.owner;
+
+            let html = document.getElementById("time");
+            html.innerHTML = data.time;
+
+            let car = document.getElementById("car");
+            car.innerHTML = data.car;
+
+            let rawdata = jQuery.parseJSON(data.data);
+            let datalist = [];
+            for (let i in rawdata) {
+                let item = rawdata[i];
+                datalist.push([item.gear, item.handbreak, item.maxrpm, item.rpm, item.speed, item.timestamp, item.pos_x, item.pos_y, item.pos_z, item.aa_x,
+                    item.aa_y, item.aa_z, item.av_x, item.av_y, item.av_z, item.la_x, item.la_y, item.la_z, item.lv_x, item.lv_y, item.lv_z]);
+            }
+
+            console.log(data.pred);
+            render(datalist, data.pred);
+
+            await sleep(1000);
+            socket.emit('wsrequest');
+        });
+        socket.emit('wsrequest');
+    </script>
+{% endblock %}
+
