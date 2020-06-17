@@ -3,7 +3,7 @@
 from flask import Flask, render_template
 
 from app import commands, public, user
-from app.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate, webpack, socketio
+from app.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate, flask_static_digest, socketio
 
 
 def create_app(config_object='app.settings'):
@@ -30,7 +30,7 @@ def register_extensions(app):
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)
-    webpack.init_app(app)
+    flask_static_digest.init_app(app)
     socketio.init_app(app)
     return None
 
