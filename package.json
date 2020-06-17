@@ -1,7 +1,7 @@
 {
-  "name": "app",
+  "name": "Real-time-Vehicle-Monitor",
   "version": "1.0.0",
-  "description": "A flasky app.",
+  "description": "A real-time vehicle monitor application powered by flask.",
   "scripts": {
     "build": "run-script-os",
     "build:win32": "SET NODE_ENV=production && webpack --progress --colors -p && npm run flask-static-digest",
@@ -18,17 +18,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bye-lemon/app.git"
+    "url": "git+https://github.com/Bye-lemon/Real-time-Vehicle-Monitor.git"
   },
   "author": "Li Yingping",
   "license": "BSD-3-Clause",
   "engines": {
-    "node": ">=4"
+    "node": ">=12"
   },
   "bugs": {
-    "url": "https://github.com/Bye-lemon/app/issues"
+    "url": "https://github.com/Bye-lemon/Real-time-Vehicle-Monitor/issues"
   },
-  "homepage": "https://github.com/Bye-lemon/app#readme",
+  "homepage": "https://github.com/Bye-lemon/Real-time-Vehicle-Monitor#readme",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
     "bootstrap": "^4.3.1",
@@ -38,8 +38,7 @@
     "highcharts": "^7.1.2",
     "jquery": "^3.4.1",
     "popper.js": "^1.15.0",
-    "socket.io-client": "^2.2.0",
-    "win-node-env": "^0.3.0"
+    "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -52,14 +51,11 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.17.3",
     "file-loader": "^6.0.0",
-    "font-awesome-webpack": "0.0.5-beta.2",
     "less": "^3.9.0",
     "less-loader": "^6.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "raw-loader": "^4.0.0",
     "url-loader": "^4.0.0",
-    "style-loader": "^0.23.0",
-    "sync-exec": "^0.6.2",
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.2",
     "run-script-os": "^1.0.7"
