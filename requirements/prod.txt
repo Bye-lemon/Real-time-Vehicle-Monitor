@@ -41,7 +41,7 @@ environs==8.0.0
 
 # SocketIO
 Flask-SocketIO==4.3.0
-eventlet==0.25.2
+eventlet==0.31.0
 
 # Machine Learning Support
 scikit-learn==0.23.1
